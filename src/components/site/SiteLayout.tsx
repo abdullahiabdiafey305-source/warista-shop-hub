@@ -179,7 +179,7 @@ export function Footer() {
       <div className="border-t border-border/70 py-4 text-center text-xs text-muted-foreground">
         © {new Date().getFullYear()} {settings?.business_name || "Warista Electronics"} · Fargo, ND
         {" · "}
-        <Link to="/auth" className="underline-offset-4 hover:underline">
+        <Link to="/admin/login" className="underline-offset-4 hover:underline">
           Owner login
         </Link>
       </div>
