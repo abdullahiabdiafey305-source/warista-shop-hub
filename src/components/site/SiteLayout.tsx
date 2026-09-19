@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Menu, Search, Smartphone } from "lucide-react";
+import { Clock3, Menu, Search, Smartphone } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -43,10 +43,13 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/92 backdrop-blur-xl">
+      <div className="bg-primary px-4 py-2 text-center text-[11px] font-semibold tracking-wide text-primary-foreground">
+        <span className="inline-flex items-center gap-1.5"><Clock3 className="size-3.5 text-brand" /> Local pickup in Fargo · Every phone tested before it ships</span>
+      </div>
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4">
         <Link to="/" className="flex shrink-0 items-center gap-2">
-          <span className="grid size-9 place-items-center rounded-lg bg-primary text-primary-foreground">
+          <span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm">
             <Smartphone className="size-5" />
           </span>
           <span className="font-display text-base font-bold leading-tight sm:text-lg">
@@ -59,7 +62,7 @@ export function Header() {
             <Link
               key={l.to}
               to={l.to}
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              className="rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               activeOptions={{ exact: l.to === "/" }}
               activeProps={{ className: "text-foreground bg-accent" }}
             >
@@ -117,7 +120,7 @@ export function Header() {
           </Sheet>
         </div>
       </div>
-      <div className="border-t border-border/70 px-4 py-2 lg:hidden">
+      <div className="border-t border-border/70 bg-card/70 px-4 py-2 lg:hidden">
         <div className="mx-auto max-w-6xl">
           <SearchBox />
         </div>

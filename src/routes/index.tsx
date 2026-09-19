@@ -56,20 +56,20 @@ function Home() {
 
   return (
     <SiteLayout>
-      <section className="hero-surface">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-16 sm:py-24 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+      <section className="hero-surface tech-grid overflow-hidden">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-28">
           <div className="text-primary-foreground">
-            <span className="inline-flex rounded-full border border-primary-foreground/25 bg-primary-foreground/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
-              Fargo, North Dakota
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary-foreground/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em]">
+              <span className="size-1.5 rounded-full bg-brand" /> Fargo, North Dakota
             </span>
-            <h1 className="mt-5 text-4xl font-extrabold leading-tight sm:text-5xl">
-              New &amp; Used Samsung and iPhones
+            <h1 className="mt-6 max-w-2xl text-4xl font-extrabold leading-[1.05] sm:text-6xl">
+              Phones that fit your life, <span className="text-brand">not your budget.</span>
             </h1>
-            <p className="mt-4 max-w-xl text-base text-primary-foreground/80">
+            <p className="mt-6 max-w-xl text-base leading-7 text-primary-foreground/75 sm:text-lg">
               Warista Electronics is a small, local phone shop. Every device is tested, honestly
               graded and unlocked — with prices that make sense.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-9 flex flex-wrap gap-3">
               <Button asChild size="lg" className="bg-brand text-brand-foreground hover:bg-brand/90">
                 <Link to="/shop">Shop all phones</Link>
               </Button>
@@ -83,13 +83,14 @@ function Home() {
               </Button>
             </div>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="relative grid gap-3 sm:grid-cols-2 lg:pl-8">
+            <div className="pointer-events-none absolute -right-8 -top-12 hidden size-56 rounded-full border border-brand/30 lg:block" />
             <Link
               to="/shop"
               search={{ brand: "iPhone" }}
-              className="rounded-xl border border-primary-foreground/20 bg-primary-foreground/10 p-6 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+              className="group rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-6 text-primary-foreground backdrop-blur-sm transition-all hover:-translate-y-1 hover:bg-primary-foreground/20"
             >
-              <p className="font-display text-xl font-bold">iPhones</p>
+              <p className="font-display text-xl font-bold transition-colors group-hover:text-brand">iPhones</p>
               <p className="mt-1 text-sm text-primary-foreground/75">
                 SE to 15 Pro Max, unlocked
               </p>
@@ -97,9 +98,9 @@ function Home() {
             <Link
               to="/shop"
               search={{ brand: "Samsung" }}
-              className="rounded-xl border border-primary-foreground/20 bg-primary-foreground/10 p-6 text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+              className="group rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-6 text-primary-foreground backdrop-blur-sm transition-all hover:-translate-y-1 hover:bg-primary-foreground/20"
             >
-              <p className="font-display text-xl font-bold">Samsung</p>
+              <p className="font-display text-xl font-bold transition-colors group-hover:text-brand">Samsung</p>
               <p className="mt-1 text-sm text-primary-foreground/75">
                 Galaxy A, S and Z series
               </p>
@@ -108,10 +109,26 @@ function Home() {
         </div>
       </section>
 
+      <section className="border-b border-border bg-card">
+        <div className="mx-auto grid max-w-6xl gap-5 px-4 py-6 sm:grid-cols-3">
+          {[
+            ["01", "Tested devices", "Every phone is checked before listing."],
+            ["02", "Honest grading", "Clear condition notes and battery health."],
+            ["03", "Local support", "Real answers from a Fargo-based seller."],
+          ].map(([number, title, text]) => (
+            <div key={number} className="flex gap-3 border-border sm:border-r sm:px-5 first:pl-0 last:border-0">
+              <span className="font-display text-sm font-bold text-brand">{number}</span>
+              <div><p className="text-sm font-bold">{title}</p><p className="mt-0.5 text-xs text-muted-foreground">{text}</p></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="mx-auto max-w-6xl px-4 py-14">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold sm:text-3xl">Latest arrivals</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Fresh inventory</p>
+            <h2 className="mt-2 text-2xl font-bold sm:text-3xl">Latest arrivals</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Freshly added stock, updated as phones come in.
             </p>
@@ -144,7 +161,8 @@ function Home() {
 
       <section className="border-y border-border bg-primary-soft">
         <div className="mx-auto max-w-6xl px-4 py-14">
-          <h2 className="text-2xl font-bold sm:text-3xl">How buying works</h2>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Simple from start to finish</p>
+          <h2 className="mt-2 text-2xl font-bold sm:text-3xl">How buying works</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             No card checkout — you pay directly by PayPal, CashApp or Zelle.
           </p>

@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { ProductCard } from "@/components/site/ProductCard";
@@ -119,12 +119,16 @@ function Shop() {
             setSearch({ q: keyword.trim() || undefined });
           }}
         >
-          <Input
-            id="shop-search"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Model or keyword"
-          />
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="shop-search"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder="Model or keyword"
+              className="pl-9"
+            />
+          </div>
           <Button type="submit" variant="secondary">
             Go
           </Button>
@@ -214,9 +218,16 @@ function Shop() {
 
   return (
     <SiteLayout>
-      <div className="mx-auto max-w-6xl px-4 py-10">
-        <h1 className="text-3xl font-bold">Shop phones</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
+        <div className="flex flex-col justify-between gap-5 border-b border-border pb-8 sm:flex-row sm:items-end">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">The collection</p>
+            <h1 className="mt-2 text-3xl font-bold sm:text-4xl">Find your next phone</h1>
+            <p className="mt-2 max-w-xl text-sm text-muted-foreground">Unlocked iPhones and Samsung devices, clearly graded and ready for a new home.</p>
+          </div>
+          <div className="rounded-xl bg-primary px-4 py-3 text-primary-foreground shadow-sm"><p className="text-2xl font-bold leading-none">{isLoading ? "—" : filtered.length}</p><p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary-foreground/70">devices found</p></div>
+        </div>
+        <p className="mt-3 text-sm text-muted-foreground">
           {isLoading ? "Loading inventory…" : `${filtered.length} phone${filtered.length === 1 ? "" : "s"} available`}
         </p>
 
@@ -231,15 +242,15 @@ function Shop() {
               {showFilters ? "Hide filters" : "Filters & search"}
             </Button>
             <div
-              className={`${showFilters ? "block" : "hidden"} mt-4 rounded-xl border border-border bg-card p-5 lg:mt-0 lg:block`}
+              className={`${showFilters ? "block" : "hidden"} soft-panel mt-4 rounded-2xl border border-border p-5 lg:mt-0 lg:block`}
             >
               {filterPanel}
             </div>
           </aside>
 
           <div>
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm text-muted-foreground">
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3">
+              <p className="text-sm font-medium text-muted-foreground">
                 Page {page} of {pageCount}
               </p>
               <Select
