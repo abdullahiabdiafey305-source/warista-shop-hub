@@ -56,7 +56,10 @@ function Home() {
 
   return (
     <SiteLayout>
-      <section className="hero-surface tech-grid overflow-hidden">
+      <section
+        className="hero-surface tech-grid overflow-hidden"
+        style={{ background: "linear-gradient(115deg, #123b32 0%, #123c63 100%)" }}
+      >
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-28">
           <div className="text-primary-foreground">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary-foreground/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em]">
