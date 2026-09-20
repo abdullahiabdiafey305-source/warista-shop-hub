@@ -6,7 +6,7 @@ import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { settingsQuery } from "@/lib/shop";
+import { DEFAULT_BUSINESS_EMAIL, DEFAULT_BUSINESS_PHONE, settingsQuery } from "@/lib/shop";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -155,14 +155,12 @@ export function Footer() {
         <div>
           <p className="text-sm font-semibold">Contact</p>
           <a
-            href={`mailto:${settings?.business_email || "alimandera@gmail.com"}`}
+            href={`mailto:${settings?.business_email || DEFAULT_BUSINESS_EMAIL}`}
             className="mt-2 block text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
-            {settings?.business_email || "alimandera@gmail.com"}
+            {settings?.business_email || DEFAULT_BUSINESS_EMAIL}
           </a>
-          {settings?.business_phone ? (
-            <p className="text-sm text-muted-foreground">{settings.business_phone}</p>
-          ) : null}
+          <p className="text-sm text-muted-foreground">{settings?.business_phone || DEFAULT_BUSINESS_PHONE}</p>
           <Link
             to="/contact"
             className="mt-2 block text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
@@ -192,7 +190,7 @@ export function Footer() {
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   const { data: settings } = useQuery(settingsQuery);
-  const phoneDigits = settings?.business_phone?.replace(/\D/g, "") ?? "";
+  const phoneDigits = (settings?.business_phone || DEFAULT_BUSINESS_PHONE).replace(/\D/g, "");
   const whatsappNumber = phoneDigits.length === 10 ? `1${phoneDigits}` : phoneDigits;
 
   return (

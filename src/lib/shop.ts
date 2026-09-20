@@ -18,6 +18,9 @@ export const ORDER_STATUSES = [
   "Cancelled",
 ] as const;
 
+export const DEFAULT_BUSINESS_EMAIL = "alimandera@gmail.com";
+export const DEFAULT_BUSINESS_PHONE = "+1 (701) 318-2784";
+
 export type Brand = (typeof BRANDS)[number];
 export type Condition = (typeof CONDITIONS)[number];
 export type StockStatus = (typeof STOCK_STATUSES)[number];
