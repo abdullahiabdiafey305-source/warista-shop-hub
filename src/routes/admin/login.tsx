@@ -68,16 +68,27 @@ function AdminLogin() {
       return;
     }
 
+    const lastResetRequest = Number(localStorage.getItem("warista-last-password-reset") ?? 0);
+    if (Date.now() - lastResetRequest < 60_000) {
+      toast.error("Please wait one minute before requesting another reset email.");
+      return;
+    }
+
     try {
       setResetPending(true);
       const { error } = await supabase.auth.resetPasswordForEmail(trimmed, {
         redirectTo: `${window.location.origin}/admin/reset-password`,
       });
       if (error) throw error;
+      localStorage.setItem("warista-last-password-reset", String(Date.now()));
       toast.success("If that account exists, a reset email is on the way. Check spam too.");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Reset request failed.";
-      toast.error(`${message} Check Supabase Auth email settings and logs.`);
+      toast.error(
+        message.toLowerCase().includes("rate limit")
+          ? "Supabase email limit reached. Wait for the limit to reset, then try once."
+          : `${message} Check Supabase Auth email settings and logs.`,
+      );
     } finally {
       setResetPending(false);
     }
