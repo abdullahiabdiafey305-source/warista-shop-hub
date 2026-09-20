@@ -32,7 +32,7 @@ function AdminMessages() {
         <CardHeader>
           <CardTitle className="text-xl">Contact messages</CardTitle>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="overflow-x-auto p-0">
           {isLoading ? (
             <div className="space-y-3 p-4">
               <Skeleton className="h-14 w-full rounded-lg" />
@@ -41,7 +41,7 @@ function AdminMessages() {
           ) : isError ? (
             <div className="p-4 text-sm text-destructive">Messages could not be loaded.</div>
           ) : (
-            <Table>
+            <Table className="min-w-[720px]">
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>

@@ -70,27 +70,29 @@ export function AdminShell() {
         </aside>
 
         <div className="min-w-0 flex-1">
-          <header className="mb-6 flex items-center justify-between gap-4 rounded-3xl border border-border bg-card px-5 py-4 shadow-card">
+          <header className="mb-4 rounded-3xl border border-border bg-card px-4 py-4 shadow-card sm:mb-6 sm:px-5">
+            <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
                 Owner workspace
               </p>
               <h1 className="mt-1 text-2xl font-bold text-foreground">Warista Electronics</h1>
             </div>
-            <div className="lg:hidden">
-              <nav className="flex flex-wrap gap-2">
-                {navItems.map(({ to, label }) => (
-                  <Link
-                    key={to}
-                    to={to}
-                    activeProps={{ className: "border-primary bg-primary text-primary-foreground" }}
-                    className="rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
-                  >
-                    {label}
-                  </Link>
-                ))}
-              </nav>
+            <div className="grid size-9 place-items-center rounded-xl bg-primary/10 text-primary lg:hidden"><Smartphone className="size-4" /></div>
             </div>
+            <nav className="mt-4 flex gap-2 overflow-x-auto pb-1 lg:hidden">
+              {navItems.map(({ to, label, icon: Icon, exact }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  activeOptions={{ exact }}
+                  activeProps={{ className: "border-primary bg-primary text-primary-foreground" }}
+                  className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <Icon className="size-3.5" /> {label}
+                </Link>
+              ))}
+            </nav>
           </header>
 
           <Outlet />

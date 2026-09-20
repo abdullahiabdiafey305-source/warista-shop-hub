@@ -21,9 +21,9 @@ function AdminOrders() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col justify-between gap-3 rounded-3xl border border-border bg-card p-5 shadow-card sm:flex-row sm:items-end">
+      <div className="flex flex-col justify-between gap-4 rounded-3xl border border-border bg-card p-5 shadow-card sm:flex-row sm:items-end">
         <div><p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Sales pipeline</p><h2 className="mt-1 text-2xl font-bold">Order requests</h2><p className="mt-1 text-sm text-muted-foreground">Track payment, fulfillment, and customer details.</p></div>
-        <div className="rounded-xl bg-primary px-4 py-3 text-primary-foreground"><p className="text-2xl font-bold leading-none">{data?.length ?? "—"}</p><p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary-foreground/70">total requests</p></div>
+        <div className="w-full rounded-xl bg-primary px-4 py-3 text-primary-foreground sm:w-auto"><p className="text-2xl font-bold leading-none">{data?.length ?? "—"}</p><p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary-foreground/70">total requests</p></div>
       </div>
       <Card className="shadow-card">
         <CardHeader>

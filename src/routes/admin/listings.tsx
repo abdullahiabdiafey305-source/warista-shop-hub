@@ -226,11 +226,11 @@ function AdminListings() {
       )}
 
       <Card className="shadow-card">
-        <CardHeader className="flex flex-row items-center justify-between gap-4">
+        <CardHeader className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
           <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-brand">Live stock</p><CardTitle className="mt-1 text-xl">Current inventory</CardTitle></div>
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex w-full items-center gap-2 text-sm sm:w-auto">
             <ArrowUpDown className="size-4 text-muted-foreground" />
-            <select value={order} onChange={(e) => setOrder(e.target.value as any)} className="rounded-lg border border-border bg-background px-2 py-1.5 text-sm">
+            <select value={order} onChange={(e) => setOrder(e.target.value as any)} className="min-w-0 flex-1 rounded-lg border border-border bg-background px-2 py-2 text-sm sm:flex-none">
               <option value="newest">Newest</option>
               <option value="price-high">Price: high to low</option>
               <option value="price-low">Price: low to high</option>

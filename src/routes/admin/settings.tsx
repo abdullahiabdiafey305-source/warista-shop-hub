@@ -146,8 +146,8 @@ function AdminSettings() {
                 <Label>WhatsApp catalog URL</Label>
                 <Input type="url" className="mt-1.5" placeholder="https://wa.me/c/..." value={form.whatsapp_catalog_url} onChange={(e) => setForm((prev) => ({ ...prev, whatsapp_catalog_url: e.target.value }))} />
               </div>
-              <div className="md:col-span-2 flex justify-end">
-                <Button onClick={() => mutation.mutate()} disabled={mutation.isPending}>Save settings</Button>
+              <div className="flex justify-end md:col-span-2">
+                <Button className="w-full sm:w-auto" onClick={() => mutation.mutate()} disabled={mutation.isPending}>Save settings</Button>
               </div>
             </div>
           )}
@@ -162,7 +162,7 @@ function AdminSettings() {
           <div className="max-w-md space-y-3">
             <Label>New password</Label>
             <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" />
-            <Button onClick={() => passwordMutation.mutate()} disabled={passwordMutation.isPending}>Update password</Button>
+            <Button className="w-full sm:w-auto" onClick={() => passwordMutation.mutate()} disabled={passwordMutation.isPending}>Update password</Button>
           </div>
         </CardContent>
       </Card>
