@@ -71,7 +71,7 @@ function AdminLogin() {
     try {
       setResetPending(true);
       const { error } = await supabase.auth.resetPasswordForEmail(trimmed, {
-        redirectTo: `${window.location.origin}/admin/login`,
+        redirectTo: `${window.location.origin}/admin/reset-password`,
       });
       if (error) throw error;
       toast.success("If that account exists, a reset email is on the way. Check spam too.");

@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin")({
   beforeLoad: async ({ location }) => {
-    if (location.pathname === "/admin/login") return;
+    if (location.pathname === "/admin/login" || location.pathname === "/admin/reset-password") return;
 
     const { data, error } = await supabase.auth.getSession();
 
