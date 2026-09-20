@@ -53,6 +53,7 @@ export type Settings = {
   business_email: string | null;
   business_phone: string | null;
   business_hours: string | null;
+  whatsapp_catalog_url: string | null;
 };
 
 const PRODUCT_SELECT = "*, product_images(id, url, position)";

@@ -22,6 +22,7 @@ export type AdminMessage = {
   email: string;
   message: string;
   created_at: string;
+  read_at: string | null;
 };
 
 export async function requireAdminSession() {
@@ -42,21 +43,6 @@ export async function requireAdminSession() {
   }
 
   return data.session;
-}
-
-export function getStoredReadMessageIds(): string[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const next = JSON.parse(localStorage.getItem("warista-admin-read-messages") ?? "[]");
-    return Array.isArray(next) ? next.filter((value): value is string => typeof value === "string") : [];
-  } catch {
-    return [];
-  }
-}
-
-export function setStoredReadMessageIds(ids: string[]) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem("warista-admin-read-messages", JSON.stringify(ids));
 }
 
 export async function fetchAdminProducts(): Promise<Product[]> {
@@ -132,7 +118,7 @@ export async function fetchAdminOrder(id: string): Promise<AdminOrder | null> {
 export async function fetchAdminMessages(): Promise<AdminMessage[]> {
   const { data, error } = await supabase
     .from("contact_messages")
-    .select("id, name, email, message, created_at")
+    .select("id, name, email, message, created_at, read_at")
     .order("created_at", { ascending: false });
 
   if (error) throw new Error(error.message);
@@ -144,6 +130,31 @@ export async function fetchAdminSettings(): Promise<Settings | null> {
   const { data, error } = await supabase.from("settings").select("*").eq("id", 1).maybeSingle();
   if (error) throw new Error(error.message);
   return (data ?? null) as Settings | null;
+}
+
+export async function updateOrderStatus(id: string, status: string) {
+  const { data: order, error: orderError } = await supabase
+    .from("orders")
+    .select("product_id")
+    .eq("id", id)
+    .single();
+  if (orderError) throw new Error(orderError.message);
+
+  const { error } = await supabase.from("orders").update({ status }).eq("id", id);
+  if (error) throw new Error(error.message);
+
+  if (order.product_id) {
+    const nextProductStatus = ["Paid", "Completed"].includes(status)
+      ? "Sold"
+      : status === "Cancelled"
+        ? "Active"
+        : "Reserved";
+    const { error: productError } = await supabase
+      .from("products")
+      .update({ stock_status: nextProductStatus, updated_at: new Date().toISOString() })
+      .eq("id", order.product_id);
+    if (productError) throw new Error(productError.message);
+  }
 }
 
 export async function uploadProductImages(productId: string, files: File[]) {

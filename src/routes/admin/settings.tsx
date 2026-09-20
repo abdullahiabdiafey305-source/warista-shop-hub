@@ -27,6 +27,7 @@ function AdminSettings() {
     business_email: "",
     business_phone: "",
     business_hours: "",
+    whatsapp_catalog_url: "",
   });
   const [password, setPassword] = useState("");
   const hydratedSettings = useRef(false);
@@ -43,6 +44,7 @@ function AdminSettings() {
       business_email: data.business_email ?? "",
       business_phone: data.business_phone ?? "",
       business_hours: data.business_hours ?? "",
+      whatsapp_catalog_url: data.whatsapp_catalog_url ?? "",
     });
     hydratedSettings.current = true;
   }, [data]);
@@ -60,6 +62,7 @@ function AdminSettings() {
           business_email: form.business_email,
           business_phone: form.business_phone,
           business_hours: form.business_hours,
+          whatsapp_catalog_url: form.whatsapp_catalog_url,
           updated_at: new Date().toISOString(),
         })
         .eq("id", 1);
@@ -138,6 +141,10 @@ function AdminSettings() {
               <div className="md:col-span-2">
                 <Label>Business hours</Label>
                 <Input className="mt-1.5" value={form.business_hours} onChange={(e) => setForm((prev) => ({ ...prev, business_hours: e.target.value }))} />
+              </div>
+              <div className="md:col-span-2">
+                <Label>WhatsApp catalog URL</Label>
+                <Input type="url" className="mt-1.5" placeholder="https://wa.me/c/..." value={form.whatsapp_catalog_url} onChange={(e) => setForm((prev) => ({ ...prev, whatsapp_catalog_url: e.target.value }))} />
               </div>
               <div className="md:col-span-2 flex justify-end">
                 <Button onClick={() => mutation.mutate()} disabled={mutation.isPending}>Save settings</Button>

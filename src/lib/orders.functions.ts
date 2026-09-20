@@ -14,7 +14,7 @@ const createOrderSchema = z.object({
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
 
 export const createOrder = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => createOrderSchema.parse(data))
+  .validator((data: unknown) => createOrderSchema.parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -56,7 +56,7 @@ export const createOrder = createServerFn({ method: "POST" })
   });
 
 export const getOrder = createServerFn({ method: "GET" })
-  .inputValidator((data: unknown) => z.object({ id: z.string().uuid() }).parse(data))
+  .validator((data: unknown) => z.object({ id: z.string().uuid() }).parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 

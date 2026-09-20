@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchAdminOrder } from "@/lib/admin";
+import { fetchAdminOrder, updateOrderStatus } from "@/lib/admin";
 import { ORDER_STATUSES, productTitle } from "@/lib/shop";
 import { formatPrice } from "@/lib/format";
 
@@ -21,13 +21,14 @@ function AdminOrderDetail() {
 
   const mutation = useMutation({
     mutationFn: async (status: string) => {
-      const { error } = await supabase.from("orders").update({ status }).eq("id", id);
-      if (error) throw new Error(error.message);
+      await updateOrderStatus(id, status);
     },
     onSuccess: () => {
       toast.success("Order status updated.");
       queryClient.invalidateQueries({ queryKey: ["admin-order", id] });
       queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     },
     onError: (error) => toast.error(error instanceof Error ? error.message : "Unable to update order."),
   });

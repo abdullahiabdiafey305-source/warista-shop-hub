@@ -74,6 +74,8 @@ create table if not exists public.contact_messages (
   created_at timestamptz not null default now()
 );
 
+alter table public.contact_messages add column if not exists read_at timestamptz;
+
 grant insert on public.contact_messages to anon, authenticated;
 grant select, delete on public.contact_messages to authenticated;
 alter table public.contact_messages enable row level security;
@@ -94,8 +96,11 @@ create table if not exists public.settings (
   business_email text default 'alimandera@gmail.com',
   business_phone text default '+1 (701) 318-2784',
   business_hours text default 'Mon-Sat, 9am - 7pm CT',
+  whatsapp_catalog_url text default '',
   updated_at timestamptz not null default now()
 );
+
+alter table public.settings add column if not exists whatsapp_catalog_url text default '';
 
 insert into public.settings (id) values (1) on conflict (id) do nothing;
 grant select on public.settings to anon, authenticated;

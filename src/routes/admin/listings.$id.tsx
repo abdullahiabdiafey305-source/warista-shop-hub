@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, ImageOff, Save, Trash2, UploadCloud } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, ImageOff, Save, Star, Trash2, UploadCloud } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -80,6 +80,19 @@ function AdminListingDetail() {
     }
   }
 
+  async function moveImage(imageId: string, targetIndex: number) {
+    const images = sortImages(product);
+    const index = images.findIndex((image) => image.id === imageId);
+    const nextIndex = targetIndex;
+    if (index < 0 || nextIndex < 0 || nextIndex >= images.length) return;
+    const reordered = [...images];
+    [reordered[index], reordered[nextIndex]] = [reordered[nextIndex], reordered[index]];
+    const results = await Promise.all(reordered.map((image, position) => supabase.from("product_images").update({ position }).eq("id", image.id)));
+    const error = results.find((result) => result.error)?.error;
+    if (error) toast.error(error.message);
+    else queryClient.invalidateQueries({ queryKey: ["admin-product", id] });
+  }
+
   if (isLoading) return <Skeleton className="h-96 w-full rounded-2xl" />;
   if (isError || !product) return <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-5 text-sm text-destructive">Listing could not be loaded.</div>;
 
@@ -100,14 +113,14 @@ function AdminListingDetail() {
             <Field label="Stock status"><Select value={form.stock_status} onValueChange={(value) => setForm((prev) => ({ ...prev, stock_status: value }))}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{STOCK_STATUSES.map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select></Field>
           </div>
           <div className="mt-4"><Label>Description</Label><Textarea className="mt-1.5 min-h-28" value={form.description} onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))} /></div>
-          <div className="mt-4 rounded-xl border border-dashed border-border p-4"><Label className="flex items-center gap-2"><UploadCloud className="size-4" /> Add photos</Label><Input type="file" multiple accept="image/*" className="mt-3" onChange={(e) => setFiles(Array.from(e.target.files ?? []))} /></div>
+          <div className="mt-4 rounded-xl border border-dashed border-border p-4"><Label className="flex items-center gap-2"><UploadCloud className="size-4" /> Add photos</Label><Input type="file" multiple accept="image/*" className="mt-3" onChange={(e) => setFiles((current) => [...current, ...Array.from(e.target.files ?? [])])} /><p className="mt-2 text-xs text-muted-foreground">Select as many images as you need. They will be added to this phone when you save.</p>{files.length ? <p className="mt-1 text-xs font-semibold text-brand">{files.length} new image{files.length === 1 ? "" : "s"} queued</p> : null}</div>
           <div className="mt-5 flex justify-end"><Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending} className="gap-2"><Save className="size-4" /> {saveMutation.isPending ? "Saving..." : "Save changes"}</Button></div>
         </CardContent>
       </Card>
       <Card className="shadow-card">
         <CardHeader><CardTitle className="text-xl">Photos</CardTitle></CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {sortImages(product).map((image, index) => <div key={image.id} className="relative overflow-hidden rounded-xl border border-border"><div className="aspect-square bg-muted">{image.url ? <img src={image.url} alt={`${product.model} photo ${index + 1}`} className="size-full object-cover" /> : <ImageOff className="m-auto size-8" />}</div><div className="flex items-center justify-between p-2 text-xs"><span>{index === 0 ? "Main photo" : `Photo ${index + 1}`}</span><button onClick={() => deleteImage(image.id)} className="text-destructive" aria-label="Delete photo"><Trash2 className="size-4" /></button></div></div>)}
+          {sortImages(product).map((image, index, images) => <div key={image.id} className="relative overflow-hidden rounded-xl border border-border"><div className="aspect-square bg-muted">{image.url ? <img src={image.url} alt={`${product.model} photo ${index + 1}`} className="size-full object-cover" /> : <ImageOff className="m-auto size-8" />}</div><div className="space-y-2 p-2 text-xs"><div className="flex items-center justify-between"><span className="font-medium">{index === 0 ? "Main photo" : `Photo ${index + 1}`}</span><button onClick={() => deleteImage(image.id)} className="text-destructive" aria-label="Delete photo"><Trash2 className="size-4" /></button></div><div className="flex items-center justify-between gap-1"><button disabled={index === 0} onClick={() => moveImage(image.id, index - 1)} aria-label="Move photo left" className="rounded border p-1 disabled:opacity-30"><ChevronLeft className="size-3.5" /></button>{index !== 0 ? <button onClick={() => moveImage(image.id, 0)} className="inline-flex items-center gap-1 rounded border px-2 py-1 text-[10px] font-semibold"><Star className="size-3" /> Make main</button> : <span className="text-brand">Primary image</span>}<button disabled={index === images.length - 1} onClick={() => moveImage(image.id, index + 1)} aria-label="Move photo right" className="rounded border p-1 disabled:opacity-30"><ChevronRight className="size-3.5" /></button></div></div></div>)}
         </CardContent>
       </Card>
     </div>

@@ -210,6 +210,11 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           <span className="hidden sm:inline">Chat on WhatsApp</span>
         </a>
       ) : null}
+      {settings?.whatsapp_catalog_url ? (
+        <a href={settings.whatsapp_catalog_url} target="_blank" rel="noreferrer" aria-label="Open WhatsApp product catalog" className="fixed bottom-20 right-5 z-40 rounded-full border border-border bg-card px-4 py-2 text-xs font-bold text-foreground shadow-lg transition-transform hover:-translate-y-1">
+          Browse WhatsApp catalog
+        </a>
+      ) : null}
     </div>
   );
 }

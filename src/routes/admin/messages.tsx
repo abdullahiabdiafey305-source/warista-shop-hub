@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MessageSquareText } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { fetchAdminMessages, getStoredReadMessageIds, setStoredReadMessageIds } from "@/lib/admin";
+import { fetchAdminMessages } from "@/lib/admin";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/messages")({
   component: AdminMessages,
@@ -16,16 +17,14 @@ function AdminMessages() {
     queryKey: ["admin-messages"],
     queryFn: fetchAdminMessages,
   });
-
-  const readIds = getStoredReadMessageIds();
-
-  const toggleRead = (id: string) => {
-    const next = readIds.includes(id)
-      ? readIds.filter((value) => value !== id)
-      : [...readIds, id];
-    setStoredReadMessageIds(next);
-    window.dispatchEvent(new Event("warista-message-read"));
-  };
+  const queryClient = useQueryClient();
+  const readMutation = useMutation({
+    mutationFn: async ({ id, read }: { id: string; read: boolean }) => {
+      const { error } = await supabase.from("contact_messages").update({ read_at: read ? new Date().toISOString() : null }).eq("id", id);
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-messages"] }),
+  });
 
   return (
     <div className="space-y-6">
@@ -54,7 +53,7 @@ function AdminMessages() {
               </TableHeader>
               <TableBody>
                 {data?.map((message) => {
-                  const isRead = readIds.includes(message.id);
+                  const isRead = Boolean(message.read_at);
                   return (
                     <TableRow key={message.id} className={isRead ? "bg-muted/20" : ""}>
                       <TableCell>
@@ -67,7 +66,7 @@ function AdminMessages() {
                       <TableCell className="max-w-md whitespace-pre-wrap text-sm">{message.message}</TableCell>
                       <TableCell className="text-muted-foreground">{new Date(message.created_at).toLocaleDateString()}</TableCell>
                       <TableCell className="text-right">
-                        <button onClick={() => toggleRead(message.id)} className="rounded-full border border-border bg-background px-2 py-1 text-xs font-medium">
+                          <button onClick={() => readMutation.mutate({ id: message.id, read: !isRead })} className="rounded-full border border-border bg-background px-2 py-1 text-xs font-medium">
                           {isRead ? "Mark unread" : "Mark read"}
                         </button>
                       </TableCell>

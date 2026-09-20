@@ -21,6 +21,7 @@ export type Database = {
           id: string
           message: string
           name: string
+          read_at: string | null
         }
         Insert: {
           created_at?: string
@@ -28,6 +29,7 @@ export type Database = {
           id?: string
           message: string
           name: string
+          read_at?: string | null
         }
         Update: {
           created_at?: string
@@ -35,6 +37,7 @@ export type Database = {
           id?: string
           message?: string
           name?: string
+          read_at?: string | null
         }
         Relationships: []
       }
@@ -170,6 +173,7 @@ export type Database = {
           business_address: string | null
           business_email: string | null
           business_hours: string | null
+          whatsapp_catalog_url: string | null
           business_name: string | null
           business_phone: string | null
           cashapp_tag: string | null
@@ -182,6 +186,7 @@ export type Database = {
           business_address?: string | null
           business_email?: string | null
           business_hours?: string | null
+          whatsapp_catalog_url?: string | null
           business_name?: string | null
           business_phone?: string | null
           cashapp_tag?: string | null
@@ -194,6 +199,7 @@ export type Database = {
           business_address?: string | null
           business_email?: string | null
           business_hours?: string | null
+          whatsapp_catalog_url?: string | null
           business_name?: string | null
           business_phone?: string | null
           cashapp_tag?: string | null
