@@ -32,6 +32,7 @@ import {
   PAYMENT_METHODS,
   productQuery,
   productTitle,
+  settingsQuery,
   sortImages,
   type Product,
 } from "@/lib/shop";
@@ -61,6 +62,7 @@ function BuyDialog({ product }: { product: Product }) {
   const submitOrder = useServerFn(createOrder);
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
+  const { data: settings } = useQuery(settingsQuery);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
     buyer_name: "",
@@ -192,6 +194,16 @@ function BuyDialog({ product }: { product: Product }) {
                 ))}
               </SelectContent>
             </Select>
+            <div className="mt-3 rounded-xl border border-brand/30 bg-brand/8 p-3 text-sm">
+              <p className="font-semibold">{form.payment_method} selected</p>
+              <p className="mt-1 text-muted-foreground">
+                {form.payment_method === "PayPal"
+                  ? "After you submit, we’ll show the secure PayPal payment link and your order reference."
+                  : form.payment_method === "CashApp"
+                    ? `After you submit, we’ll show the Cash App tag ${settings?.cashapp_tag || "provided by the seller"}.`
+                    : `After you submit, we’ll show the Zelle details ${settings?.zelle_info || "provided by the seller"}.`}
+              </p>
+            </div>
           </div>
           <div>
             <Label htmlFor="notes">Notes (optional)</Label>

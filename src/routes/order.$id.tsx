@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { CheckCircle2, Copy } from "lucide-react";
+import { CheckCircle2, Copy, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
@@ -135,6 +135,19 @@ function OrderConfirmation() {
               <Copy className="size-4" />
             </Button>
           </div>
+          {order.payment_method === "PayPal" && settings?.paypal_link ? (
+            <Button asChild size="sm" className="mt-3 gap-2">
+              <a href={settings.paypal_link} target="_blank" rel="noreferrer">
+                Open PayPal <ExternalLink className="size-3.5" />
+              </a>
+            </Button>
+          ) : order.payment_method === "CashApp" && settings?.cashapp_tag ? (
+            <Button asChild size="sm" className="mt-3 gap-2">
+              <a href={`https://cash.app/${settings.cashapp_tag.replace(/^\$/, "")}`} target="_blank" rel="noreferrer">
+                Open Cash App <ExternalLink className="size-3.5" />
+              </a>
+            </Button>
+          ) : null}
           <p className="mt-4 text-sm">
             Include <span className="font-semibold">{reference}</span> as the payment note or
             reference so we can match your payment.
