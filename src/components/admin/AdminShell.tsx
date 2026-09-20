@@ -81,7 +81,11 @@ export function AdminShell() {
               </p>
               <h1 className="mt-1 text-2xl font-bold text-foreground">Warista Electronics</h1>
             </div>
-            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <div className="flex items-center gap-2 lg:hidden">
+              <Button asChild variant="outline" size="sm" className="gap-1.5 px-2.5">
+                <Link to="/"><ExternalLink className="size-3.5" /> <span className="hidden xs:inline">Storefront</span></Link>
+              </Button>
+              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open admin navigation">
                   <Menu className="size-4" />
@@ -102,7 +106,8 @@ export function AdminShell() {
                   <Button variant="ghost" className="w-full justify-start gap-2 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" onClick={async () => { await supabase.auth.signOut(); setMobileMenuOpen(false); navigate({ to: "/admin/login" }); }}><LogOut className="size-4" /> Sign out</Button>
                 </div>
               </SheetContent>
-            </Sheet>
+              </Sheet>
+            </div>
             </div>
           </header>
 
