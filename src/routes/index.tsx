@@ -51,6 +51,69 @@ const steps = [
   },
 ];
 
+const placeholderProducts: Product[] = [
+  {
+    id: "placeholder-iphone-15-pro-max",
+    brand: "iPhone",
+    model: "iPhone 15 Pro Max",
+    storage: "256GB",
+    color: "Natural Titanium",
+    condition: "New",
+    price: 1049,
+    description: "Placeholder product image. Replace with live inventory in Admin.",
+    battery_health: null,
+    stock_status: "Active",
+    featured: true,
+    created_at: "2026-01-03T00:00:00.000Z",
+    product_images: [{ id: "placeholder-iphone-15", url: "/images/seed/iphone-15-pro-max.jpg", position: 0 }],
+  },
+  {
+    id: "placeholder-iphone-14-pro",
+    brand: "iPhone",
+    model: "iPhone 14 Pro",
+    storage: "128GB",
+    color: "Deep Purple",
+    condition: "Used - Like New",
+    price: 699,
+    description: "Placeholder product image. Replace with live inventory in Admin.",
+    battery_health: 92,
+    stock_status: "Active",
+    featured: true,
+    created_at: "2026-01-02T00:00:00.000Z",
+    product_images: [{ id: "placeholder-iphone-14", url: "/images/seed/iphone-14-pro.jpg", position: 0 }],
+  },
+  {
+    id: "placeholder-galaxy-s24-ultra",
+    brand: "Samsung",
+    model: "Galaxy S24 Ultra",
+    storage: "512GB",
+    color: "Titanium Gray",
+    condition: "New",
+    price: 1199,
+    description: "Placeholder product image. Replace with live inventory in Admin.",
+    battery_health: null,
+    stock_status: "Active",
+    featured: true,
+    created_at: "2026-01-01T00:00:00.000Z",
+    product_images: [{ id: "placeholder-s24", url: "/images/seed/galaxy-s24-ultra.jpg", position: 0 }],
+  },
+  {
+    id: "placeholder-galaxy-s23",
+    brand: "Samsung",
+    model: "Galaxy S23",
+    storage: "256GB",
+    color: "Phantom Black",
+    condition: "Used - Like New",
+    price: 549,
+    description: "Placeholder product image. Replace with live inventory in Admin.",
+    battery_health: 94,
+    stock_status: "Active",
+    featured: true,
+    created_at: "2025-12-31T00:00:00.000Z",
+    product_images: [{ id: "placeholder-s23", url: "/images/seed/galaxy-s23.jpg", position: 0 }],
+  },
+];
+
 function PhoneSpotlight({ products }: { products: Product[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const slides = products.flatMap((product) => {
@@ -96,8 +159,10 @@ function PhoneSpotlight({ products }: { products: Product[] }) {
 function Home() {
   const { data, isLoading, isError } = useQuery(productsQuery);
   const { data: settings } = useQuery(settingsQuery);
-  const featured = (data ?? []).filter((p) => p.stock_status !== "Sold").slice(0, 8);
-  const spotlight = (data ?? []).filter((p) => p.stock_status === "Active" && (mainImage(p) || imageUrl(p)));
+  const liveProducts = (data ?? []).filter((p) => p.stock_status !== "Sold");
+  const featured = liveProducts.length ? liveProducts.slice(0, 8) : placeholderProducts;
+  const spotlightSource = liveProducts.length ? liveProducts : placeholderProducts;
+  const spotlight = spotlightSource.filter((p) => p.stock_status === "Active" && (mainImage(p) || imageUrl(p)));
 
   return (
     <SiteLayout>
@@ -184,8 +249,8 @@ function Home() {
         </div>
 
         {isError && (
-          <p className="mt-8 rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
-            We couldn't load the listings right now. Please refresh the page.
+          <p className="mt-8 rounded-lg border border-brand/30 bg-brand/10 p-4 text-sm text-foreground">
+            Showing starter phone placeholders while live inventory reconnects. The owner can replace them from Admin → Listings.
           </p>
         )}
 
