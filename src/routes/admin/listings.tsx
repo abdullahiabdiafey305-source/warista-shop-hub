@@ -135,10 +135,11 @@ function AdminListings() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 shadow-card sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-3xl border border-border bg-card p-5 shadow-card sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Listings</p>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Inventory control</p>
           <h2 className="mt-1 text-2xl font-bold">Phone inventory</h2>
+          <p className="mt-1 text-sm text-muted-foreground">Add, edit, price, and publish every device from one workspace.</p>
         </div>
         <Button onClick={() => setShowForm((value) => !value)} className="gap-2">
           <Plus className="size-4" /> {showForm ? "Close form" : "Add new phone"}
@@ -226,7 +227,7 @@ function AdminListings() {
 
       <Card className="shadow-card">
         <CardHeader className="flex flex-row items-center justify-between gap-4">
-          <CardTitle className="text-xl">Current inventory</CardTitle>
+          <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-brand">Live stock</p><CardTitle className="mt-1 text-xl">Current inventory</CardTitle></div>
           <div className="flex items-center gap-2 text-sm">
             <ArrowUpDown className="size-4 text-muted-foreground" />
             <select value={order} onChange={(e) => setOrder(e.target.value as any)} className="rounded-lg border border-border bg-background px-2 py-1.5 text-sm">
@@ -236,7 +237,7 @@ function AdminListings() {
             </select>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="overflow-x-auto p-0">
           {isLoading ? (
             <div className="p-4 space-y-3">
               <Skeleton className="h-14 w-full rounded-lg" />
@@ -246,7 +247,7 @@ function AdminListings() {
           ) : isError ? (
             <div className="p-4 text-sm text-destructive">We couldn’t load the product list.</div>
           ) : (
-            <Table>
+            <Table className="min-w-[760px]">
               <TableHeader>
                 <TableRow>
                   <TableHead>Phone</TableHead>
@@ -302,6 +303,9 @@ function AdminListings() {
                     </TableCell>
                   </TableRow>
                 ))}
+                {sortedProducts.length === 0 && (
+                  <TableRow><TableCell colSpan={5} className="h-32 text-center text-sm text-muted-foreground">No listings yet. Add your first phone above.</TableCell></TableRow>
+                )}
               </TableBody>
             </Table>
           )}

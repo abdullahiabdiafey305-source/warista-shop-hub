@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
-import { LayoutGrid, List, LogOut, MessageSquareText, Settings, Smartphone } from "lucide-react";
+import { ExternalLink, LayoutGrid, List, LogOut, MessageSquareText, Settings, Smartphone } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,29 +21,29 @@ export function AdminShell() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/20 text-foreground">
-      <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6 lg:px-6">
-        <aside className="hidden w-72 shrink-0 rounded-2xl border border-border bg-card p-4 shadow-card lg:block">
-          <div className="flex items-center gap-3 border-b border-border pb-4">
-            <span className="grid size-10 place-items-center rounded-xl bg-primary text-primary-foreground">
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="mx-auto flex max-w-[1440px] gap-6 px-4 py-4 lg:px-6 lg:py-6">
+        <aside className="hidden w-64 shrink-0 flex-col rounded-3xl bg-sidebar p-4 text-sidebar-foreground shadow-lift lg:flex">
+          <div className="flex items-center gap-3 border-b border-sidebar-border pb-5">
+            <span className="grid size-10 place-items-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground">
               <Smartphone className="size-5" />
             </span>
             <div>
               <p className="font-display text-lg font-bold">Warista</p>
-              <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              <p className="text-xs uppercase tracking-[0.18em] text-sidebar-foreground/60">
                 Owner admin
               </p>
             </div>
           </div>
 
-          <nav className="mt-5 space-y-1.5">
+          <nav className="mt-6 flex-1 space-y-1.5">
             {navItems.map(({ to, label, icon: Icon, exact }) => (
               <Link
                 key={to}
                 to={to}
                 activeOptions={{ exact }}
-                activeProps={{ className: "bg-primary text-primary-foreground" }}
-                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                activeProps={{ className: "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm" }}
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 <Icon className="size-4" />
                 {label}
@@ -51,10 +51,13 @@ export function AdminShell() {
             ))}
           </nav>
 
-          <div className="mt-6 border-t border-border pt-4">
+          <div className="space-y-2 border-t border-sidebar-border pt-4">
+            <Button asChild variant="ghost" className="w-full justify-start gap-2 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+              <Link to="/"><ExternalLink className="size-4" /> View storefront</Link>
+            </Button>
             <Button
-              variant="outline"
-              className="w-full justify-start gap-2"
+              variant="ghost"
+              className="w-full justify-start gap-2 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               onClick={async () => {
                 await supabase.auth.signOut();
                 navigate({ to: "/admin/login" });
@@ -67,10 +70,10 @@ export function AdminShell() {
         </aside>
 
         <div className="min-w-0 flex-1">
-          <header className="mb-6 flex items-center justify-between gap-4 rounded-2xl border border-border bg-card px-4 py-3 shadow-card">
+          <header className="mb-6 flex items-center justify-between gap-4 rounded-3xl border border-border bg-card px-5 py-4 shadow-card">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Dashboard
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
+                Owner workspace
               </p>
               <h1 className="mt-1 text-2xl font-bold text-foreground">Warista Electronics</h1>
             </div>
@@ -80,6 +83,7 @@ export function AdminShell() {
                   <Link
                     key={to}
                     to={to}
+                    activeProps={{ className: "border-primary bg-primary text-primary-foreground" }}
                     className="rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
                   >
                     {label}
