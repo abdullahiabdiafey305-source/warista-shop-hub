@@ -146,22 +146,24 @@
   }
 }
 
-@utility hero-surface {
-  background:
-    linear-gradient(115deg, oklch(0.2 0.08 164 / 0.99), oklch(0.19 0.09 218 / 0.97)),
-    linear-gradient(90deg, transparent 0 49%, oklch(0.77 0.16 78 / 0.18) 49.2% 49.5%, transparent 49.7%);
-  position: relative;
-  isolation: isolate;
-}
+@layer utilities {
+  .hero-surface {
+    background:
+      linear-gradient(115deg, oklch(0.2 0.08 164 / 0.99), oklch(0.19 0.09 218 / 0.97)),
+      linear-gradient(90deg, transparent 0 49%, oklch(0.77 0.16 78 / 0.18) 49.2% 49.5%, transparent 49.7%);
+    position: relative;
+    isolation: isolate;
+  }
 
-@utility tech-grid {
-  background-image: linear-gradient(oklch(1 0 0 / 0.055) 1px, transparent 1px), linear-gradient(90deg, oklch(1 0 0 / 0.055) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
+  .tech-grid {
+    background-image: linear-gradient(oklch(1 0 0 / 0.055) 1px, transparent 1px), linear-gradient(90deg, oklch(1 0 0 / 0.055) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
 
-@utility soft-panel {
-  background: linear-gradient(145deg, oklch(0.96 0.035 157), oklch(0.88 0.055 195));
-  box-shadow: 0 16px 45px oklch(0.18 0.06 160 / 0.12);
+  .soft-panel {
+    background: linear-gradient(145deg, oklch(0.96 0.035 157), oklch(0.88 0.055 195));
+    box-shadow: 0 16px 45px oklch(0.18 0.06 160 / 0.12);
+  }
 }
 
 @utility brand-ring {
