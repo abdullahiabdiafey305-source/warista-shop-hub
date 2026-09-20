@@ -2,10 +2,10 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, ImageOff } from "lucide-react";
 
 import { formatPrice } from "@/lib/format";
-import { conditionTone, mainImage, productTitle, type Product } from "@/lib/shop";
+import { conditionTone, imageUrl, mainImage, productTitle, type Product } from "@/lib/shop";
 
 export function ProductCard({ product }: { product: Product }) {
-  const image = mainImage(product);
+  const image = imageUrl(product, mainImage(product));
   const sold = product.stock_status === "Sold";
   const reserved = product.stock_status === "Reserved";
 

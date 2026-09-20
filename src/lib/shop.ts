@@ -63,7 +63,34 @@ export function sortImages(product: Product): ProductImage[] {
 }
 
 export function mainImage(product: Product): string | null {
-  return sortImages(product)[0]?.url ?? null;
+  return imageUrl(product, sortImages(product)[0]?.url);
+}
+
+export function imageUrl(product: Pick<Product, "brand" | "model">, url?: string | null): string | null {
+  if (url) return url;
+  const model = product.model.toLowerCase();
+  const fallback = model.includes("15 pro max")
+    ? "iphone-15-pro-max.jpg"
+    : model.includes("14 pro")
+      ? "iphone-14-pro.jpg"
+      : model.includes("13 pro max")
+        ? "iphone-13-pro-max.jpg"
+        : model === "iphone 12"
+          ? "iphone-12.jpg"
+          : model.includes("iphone se")
+            ? "iphone-se.jpg"
+            : model.includes("s24 ultra")
+              ? "galaxy-s24-ultra.jpg"
+              : model === "galaxy s23"
+                ? "galaxy-s23.jpg"
+                : model.includes("s22+")
+                  ? "galaxy-s22-plus.jpg"
+                  : model.includes("z flip")
+                    ? "galaxy-z-flip-5.jpg"
+                    : model.includes("a54")
+                      ? "galaxy-a54.jpg"
+                      : null;
+  return fallback ? `/images/seed/${fallback}` : null;
 }
 
 export function productTitle(product: Pick<Product, "model" | "storage">): string {

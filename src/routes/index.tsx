@@ -7,7 +7,7 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { ProductCard } from "@/components/site/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { mainImage, productTitle, productsQuery, settingsQuery, type Product } from "@/lib/shop";
+import { imageUrl, mainImage, productTitle, productsQuery, settingsQuery, sortImages, type Product } from "@/lib/shop";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -53,15 +53,22 @@ const steps = [
 
 function PhoneSpotlight({ products }: { products: Product[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeProduct = products[activeIndex % Math.max(products.length, 1)];
+  const slides = products.flatMap((product) => {
+    const images = sortImages(product);
+    return images.length
+      ? images.map((image) => ({ product, image: imageUrl(product, image.url) }))
+      : [{ product, image: imageUrl(product) }];
+  }).filter((slide) => slide.image);
+  const activeSlide = slides[activeIndex % Math.max(slides.length, 1)];
+  const activeProduct = activeSlide?.product;
 
   useEffect(() => {
-    if (products.length < 2) return;
+    if (slides.length < 2) return;
     const timer = window.setInterval(() => {
-      setActiveIndex((currentIndex) => (currentIndex + 1) % products.length);
+      setActiveIndex((currentIndex) => (currentIndex + 1) % slides.length);
     }, 4200);
     return () => window.clearInterval(timer);
-  }, [products.length]);
+  }, [slides.length]);
 
   if (!activeProduct) {
     return (
@@ -71,7 +78,7 @@ function PhoneSpotlight({ products }: { products: Product[] }) {
     );
   }
 
-  const image = mainImage(activeProduct);
+  const image = activeSlide?.image;
   return (
     <Link to="/product/$id" params={{ id: activeProduct.id }} className="group relative block overflow-hidden rounded-3xl border border-primary-foreground/20 bg-primary-foreground/10 p-5 text-primary-foreground shadow-2xl backdrop-blur-sm transition-transform hover:-translate-y-1">
       <div className="absolute right-5 top-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-primary-foreground/60"><span className="size-1.5 animate-pulse rounded-full bg-brand" /> Live spotlight</div>
@@ -90,7 +97,7 @@ function Home() {
   const { data, isLoading, isError } = useQuery(productsQuery);
   const { data: settings } = useQuery(settingsQuery);
   const featured = (data ?? []).filter((p) => p.stock_status !== "Sold").slice(0, 8);
-  const spotlight = (data ?? []).filter((p) => p.stock_status === "Active" && mainImage(p));
+  const spotlight = (data ?? []).filter((p) => p.stock_status === "Active" && (mainImage(p) || imageUrl(p)));
 
   return (
     <SiteLayout>

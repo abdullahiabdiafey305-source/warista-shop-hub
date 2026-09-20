@@ -29,6 +29,7 @@ import {
 import { formatPrice } from "@/lib/format";
 import {
   conditionTone,
+  imageUrl,
   PAYMENT_METHODS,
   productQuery,
   productTitle,
@@ -260,7 +261,10 @@ function ProductDetail() {
     );
   }
 
-  const images = sortImages(product);
+  const storedImages = sortImages(product);
+  const images = storedImages.length
+    ? storedImages.map((image) => ({ ...image, url: imageUrl(product, image.url) ?? image.url }))
+    : [{ id: `fallback-${product.id}`, url: imageUrl(product) ?? "", position: 0 }];
   const current = images[Math.min(active, Math.max(images.length - 1, 0))];
   const available = product.stock_status === "Active";
 
