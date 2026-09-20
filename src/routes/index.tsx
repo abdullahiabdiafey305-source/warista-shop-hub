@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { CheckCircle2, ShieldCheck, Truck, Wallet } from "lucide-react";
+import { CheckCircle2, CircleDollarSign, ExternalLink, ShieldCheck, Smartphone, Truck, Wallet } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { ProductCard } from "@/components/site/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { productsQuery } from "@/lib/shop";
+import { mainImage, productTitle, productsQuery, settingsQuery, type Product } from "@/lib/shop";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -50,9 +51,46 @@ const steps = [
   },
 ];
 
+function PhoneSpotlight({ products }: { products: Product[] }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeProduct = products[activeIndex % Math.max(products.length, 1)];
+
+  useEffect(() => {
+    if (products.length < 2) return;
+    const timer = window.setInterval(() => {
+      setActiveIndex((currentIndex) => (currentIndex + 1) % products.length);
+    }, 4200);
+    return () => window.clearInterval(timer);
+  }, [products.length]);
+
+  if (!activeProduct) {
+    return (
+      <div className="grid min-h-72 place-items-center rounded-3xl border border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground/70 backdrop-blur-sm">
+        <div className="text-center"><Smartphone className="mx-auto size-10 text-brand" /><p className="mt-3 text-sm">Fresh devices arriving soon</p></div>
+      </div>
+    );
+  }
+
+  const image = mainImage(activeProduct);
+  return (
+    <Link to="/product/$id" params={{ id: activeProduct.id }} className="group relative block overflow-hidden rounded-3xl border border-primary-foreground/20 bg-primary-foreground/10 p-5 text-primary-foreground shadow-2xl backdrop-blur-sm transition-transform hover:-translate-y-1">
+      <div className="absolute right-5 top-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-primary-foreground/60"><span className="size-1.5 animate-pulse rounded-full bg-brand" /> Live spotlight</div>
+      <div className="grid min-h-64 place-items-center overflow-hidden rounded-2xl bg-white/10 p-5">
+        {image ? <img key={image} src={image} alt={productTitle(activeProduct)} className="max-h-60 w-full object-contain drop-shadow-2xl transition-all duration-700 group-hover:scale-105" /> : <Smartphone className="size-16 text-brand" />}
+      </div>
+      <div className="mt-4 flex items-end justify-between gap-3">
+        <div><p className="text-xs font-bold uppercase tracking-[0.14em] text-brand">Now featuring</p><p className="mt-1 font-display text-lg font-bold">{productTitle(activeProduct)}</p><p className="mt-1 text-xs text-primary-foreground/65">{activeProduct.condition} · {activeProduct.brand}</p></div>
+        <span className="rounded-full bg-brand px-3 py-1.5 text-xs font-bold text-brand-foreground">View</span>
+      </div>
+    </Link>
+  );
+}
+
 function Home() {
   const { data, isLoading, isError } = useQuery(productsQuery);
+  const { data: settings } = useQuery(settingsQuery);
   const featured = (data ?? []).filter((p) => p.stock_status !== "Sold").slice(0, 8);
+  const spotlight = (data ?? []).filter((p) => p.stock_status === "Active" && mainImage(p));
 
   return (
     <SiteLayout>
@@ -84,30 +122,27 @@ function Home() {
               >
                 <Link to="/contact">Ask a question</Link>
               </Button>
+              {settings?.paypal_link ? (
+                <Button asChild size="lg" variant="ghost" className="gap-2 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground">
+                  <a href={settings.paypal_link} target="_blank" rel="noreferrer">
+                    <CircleDollarSign className="size-4" /> PayPal <ExternalLink className="size-3.5" />
+                  </a>
+                </Button>
+              ) : null}
             </div>
           </div>
-          <div className="relative grid gap-3 sm:grid-cols-2 lg:pl-8">
-            <div className="pointer-events-none absolute -right-8 -top-12 hidden size-56 rounded-full border border-brand/30 lg:block" />
-            <Link
-              to="/shop"
-              search={{ brand: "iPhone" }}
-              className="group rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-6 text-primary-foreground backdrop-blur-sm transition-all hover:-translate-y-1 hover:bg-primary-foreground/20"
-            >
-              <p className="font-display text-xl font-bold transition-colors group-hover:text-brand">iPhones</p>
-              <p className="mt-1 text-sm text-primary-foreground/75">
-                SE to 15 Pro Max, unlocked
-              </p>
-            </Link>
-            <Link
-              to="/shop"
-              search={{ brand: "Samsung" }}
-              className="group rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-6 text-primary-foreground backdrop-blur-sm transition-all hover:-translate-y-1 hover:bg-primary-foreground/20"
-            >
-              <p className="font-display text-xl font-bold transition-colors group-hover:text-brand">Samsung</p>
-              <p className="mt-1 text-sm text-primary-foreground/75">
-                Galaxy A, S and Z series
-              </p>
-            </Link>
+          <div className="relative lg:pl-8">
+            <PhoneSpotlight products={spotlight} />
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <Link to="/shop" search={{ brand: "iPhone" }} className="group rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-4 text-primary-foreground backdrop-blur-sm transition-all hover:-translate-y-1 hover:bg-primary-foreground/20">
+                <p className="font-display font-bold transition-colors group-hover:text-brand">iPhones</p>
+                <p className="mt-1 text-xs text-primary-foreground/75">SE to 15 Pro Max</p>
+              </Link>
+              <Link to="/shop" search={{ brand: "Samsung" }} className="group rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-4 text-primary-foreground backdrop-blur-sm transition-all hover:-translate-y-1 hover:bg-primary-foreground/20">
+                <p className="font-display font-bold transition-colors group-hover:text-brand">Samsung</p>
+                <p className="mt-1 text-xs text-primary-foreground/75">Galaxy A, S and Z</p>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

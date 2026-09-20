@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Clock3, Menu, Search, Smartphone } from "lucide-react";
+import { Clock3, Menu, MessageCircle, Search, Smartphone } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -191,11 +191,27 @@ export function Footer() {
 }
 
 export function SiteLayout({ children }: { children: ReactNode }) {
+  const { data: settings } = useQuery(settingsQuery);
+  const phoneDigits = settings?.business_phone?.replace(/\D/g, "") ?? "";
+  const whatsappNumber = phoneDigits.length === 10 ? `1${phoneDigits}` : phoneDigits;
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
+      {whatsappNumber.length >= 11 ? (
+        <a
+          href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hi Warista Electronics, I have a question about a phone listing.")}`}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Chat with Warista Electronics on WhatsApp"
+          className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full bg-[#168a4a] px-4 py-3 text-sm font-bold text-white shadow-xl transition-transform hover:-translate-y-1 hover:bg-[#116f3b]"
+        >
+          <MessageCircle className="size-5" />
+          <span className="hidden sm:inline">Chat on WhatsApp</span>
+        </a>
+      ) : null}
     </div>
   );
 }
